@@ -8,7 +8,7 @@
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
  */
-
+#include <linux/version.h>
 #include "xradio.h"
 #include "sta.h"
 #include "ap.h"
@@ -1168,7 +1168,11 @@ static int xradio_upload_null(struct xradio_vif *priv)
 		.rate = 0xFF,
 	};
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 52))
+	frame.skb = ieee80211_nullfunc_get(priv->hw, priv->vif, false);
+#else
 	frame.skb = ieee80211_nullfunc_get(priv->hw, priv->vif);
+#endif
 	if (WARN_ON(!frame.skb))
 		return -ENOMEM;
 
